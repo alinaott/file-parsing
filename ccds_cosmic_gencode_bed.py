@@ -1,7 +1,7 @@
 import re
 
 # checking cosmic genes for any not present in the CCDS gene list
-ccds = open("offtarget_capture/CCDS.20160908.gene_name.cons.bed", 'r')
+ccds = open("CCDS.20160908.gene_name.cons.bed", 'r')
 onco = open("cosmic_genes.csv", 'r')
 output = open('cosmic_non_CCDS.bed', 'w')
 
@@ -30,7 +30,7 @@ ccds.close()
 onco.close()
         
 # pulling out gene names from genocde GTF file
-ccds = open("offtarget_capture/CCDS.20160908.gene_name.cons.bed", 'r')
+ccds = open("CCDS.20160908.gene_name.cons.bed", 'r')
 gencode = open("gencode.v29.annotation.gtf", 'r')
 output = open('gencode.bed', 'w')
 
@@ -51,6 +51,29 @@ output.close()
 ccds.close()
 gencode.close()
 
-
 # combining files
-# in progress
+ccds = open("CCDS.20160908.gene_name.cons.bed", 'r')
+onco = open('cosmic_genes_not_in_CCDS.bed', 'r')
+gencode = open('gencode.bed', 'r')
+output = open('ccds_cosmic_gencode.bed', 'w')
+
+# output only genes and positions if not already present
+genes = []
+for i in ccds:
+    genes.append(i.strip().split()[3])
+    output.write(i)
+    
+for i in onco:
+	if i.strip().split()[3] not in genes:
+	    genes.append(i.strip().split()[3])
+    	output.write(i)
+
+for i in gencode:
+	if i.strip().split()[3] not in genes:
+	    genes.append(i.strip().split()[3])
+    	output.write(i)
+
+output.close()
+ccds.close()
+gencode.close()
+onco.close()
